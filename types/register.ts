@@ -17,8 +17,8 @@ export const registerPageLabels = {
 } as const;
 
 export const registerPageRoles = {
-  registerButton: { name: /^(?:register|create account)$/i },
-  continueButton: { name: /^(?:continue|continue shopping)$/i },
+  registerButton: { name: /^(?:register)$/i },
+  continueButton: { name: /^(?:continue)$/i },
 } as const;
 
 export const registerPageSelectors = {
