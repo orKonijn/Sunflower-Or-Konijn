@@ -14,11 +14,15 @@ export class HeaderPage extends BasePage {
   public async clickDigitalDownloadsLink(): Promise<void> {
     await this.page
       .getByRole("link", headerPageRoles.digitalDownloadsLink)
+      .first()
       .click();
   }
 
   public async clickShoppingCartLink(): Promise<void> {
-    await this.page.getByRole("link", headerPageRoles.shoppingCartLink).click();
+    await this.page
+      .locator(".header-links")
+      .getByRole("link", headerPageRoles.shoppingCartLink)
+      .click();
   }
 
   public async getAccountEmail(): Promise<string> {
