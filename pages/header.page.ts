@@ -1,11 +1,6 @@
-import { type BrowserContext, type Locator, type Page } from "@playwright/test";
+import { type BrowserContext, type Page } from "@playwright/test";
 import { BasePage } from "./base.page";
-
-const headerPageRoles = {
-  registerLink: { name: /^(?:register)$/i },
-  digitalDownloadsLink: { name: /^digital downloads?$/i },
-  shoppingCartLink: { name: /(?:shopping\s*)?cart/i },
-};
+import { headerPageRoles } from "../types/header";
 
 export class HeaderPage extends BasePage {
   constructor(page: Page, context: BrowserContext) {
@@ -27,8 +22,9 @@ export class HeaderPage extends BasePage {
   }
 
   public async getAccountEmail(): Promise<string> {
-    return (
-      (await this.page.locator(".header-links .account").textContent()) ?? ""
-    );
+    const accountEmail = await this.page
+      .locator(".header-links .account")
+      .textContent();
+    return accountEmail ?? "";
   }
 }
