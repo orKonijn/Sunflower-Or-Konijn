@@ -8,27 +8,10 @@ export class ShoppingCartPage extends BasePage {
     super(page, context);
   }
 
-  public async getProductLink(productName: string): Promise<string> {
+  public getProductLink(productName: string): Locator {
     const productNamePattern = exactTextPattern(productName);
-    const productLink = await this.findProductLink(productNamePattern);
-    const linkString = await this.extractNameFromLink(productLink);
-    return linkString;
-  }
-
-  private async findProductLink(productNamePattern: RegExp): Promise<Locator> {
-    const productLink = this.page
+    return this.page
       .locator(shoppingCartPageSelectors.cartRow)
-      .filter({
-        has: this.page.getByRole("link", { name: productNamePattern }),
-      });
-    return productLink;
-  }
-
-  private async extractNameFromLink(productLink: Locator): Promise<string> {
-    const linkText = await productLink.textContent();
-    if (!linkText) throw new Error("Product link text is empty.");
-
-    const linkString = linkText.trim();
-    return linkString;
+      .getByRole("link", { name: productNamePattern });
   }
 }

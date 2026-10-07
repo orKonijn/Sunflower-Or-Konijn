@@ -1,4 +1,4 @@
-import { expect, test, type BrowserContext } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { DigitalDownloadsPage } from "../pages/digital-downloads.page";
 import { HeaderPage } from "../pages/header.page";
 import { HomePage } from "../pages/home.page";
@@ -7,17 +7,13 @@ import { ShoppingCartPage } from "../pages/shopping-cart";
 import { getRandomEmail } from "../utils/random";
 
 test.describe("Registration and digital downloads cart", () => {
-  let context: BrowserContext;
   let homePage: HomePage;
   let headerPage: HeaderPage;
   let registerPage: RegisterPage;
   let downloadsPage: DigitalDownloadsPage;
   let cartPage: ShoppingCartPage;
 
-  test.beforeAll(async ({ browser, baseURL }) => {
-    context = await browser.newContext({ baseURL });
-    const page = await context.newPage();
-
+  test.beforeEach(async ({ page, context }) => {
     homePage = new HomePage(page, context);
     headerPage = new HeaderPage(page, context);
     registerPage = new RegisterPage(page, context);
@@ -25,14 +21,8 @@ test.describe("Registration and digital downloads cart", () => {
     cartPage = new ShoppingCartPage(page, context);
   });
 
-  test.afterAll(async () => {
-    await context?.close();
-  });
-
-  test.afterEach(async ({}, testInfo) => {
-    const page = homePage?.page;
-    if (!page || page.isClosed()) return;
-
+  test.afterEach(async ({ page }, testInfo) => {
+    if (page.isClosed()) return;
     await testInfo.attach("page-screenshot", {
       body: await page.screenshot({ fullPage: true }),
       contentType: "image/png",
@@ -63,7 +53,8 @@ test.describe("Registration and digital downloads cart", () => {
     await headerPage.clickDigitalDownloadsLink();
     const selectedProductName = await downloadsPage.addRandomProductToCart();
     await headerPage.clickShoppingCartLink();
-    const productLink = await cartPage.getProductLink(selectedProductName);
-    expect(productLink).toContain(selectedProductName);
+    const productLink = cartPage.getProductLink(selectedProductName);
+    await expect(productLink).toBeVisible();
+    await expect(productLink).toHaveText(selectedProductName);
   });
 });

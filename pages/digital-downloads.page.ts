@@ -8,8 +8,7 @@ export class DigitalDownloadsPage extends BasePage {
   }
 
   public async addRandomProductToCart(): Promise<string> {
-    const products = await this.getProducts();
-    const product = products[Math.floor(Math.random() * products.length)];
+    const product = await this.getRandomProduct();
     const productName = await this.getProductName(product);
     await product
       .getByRole("button", digitalDownloadsPageSelectors.addToCartButton)
@@ -21,15 +20,14 @@ export class DigitalDownloadsPage extends BasePage {
     return productName;
   }
 
-  private async getProducts(): Promise<Locator[]> {
-    const products = await this.page
-      .locator(digitalDownloadsPageSelectors.productCard)
-      .all();
+  private async getRandomProduct(): Promise<Locator> {
+    const products = this.page.locator(
+      digitalDownloadsPageSelectors.productCard,
+    );
+    await expect(products.first()).toBeVisible();
 
-    if (products.length === 0) {
-      throw new Error("No Digital Downloads products were found.");
-    }
-    return products;
+    const productCount = await products.count();
+    return products.nth(Math.floor(Math.random() * productCount));
   }
 
   private async getProductName(product: Locator): Promise<string> {
