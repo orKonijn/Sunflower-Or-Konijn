@@ -1,4 +1,4 @@
-import { BrowserContext, Locator, Page } from "@playwright/test";
+import { BrowserContext, expect, Locator, Page } from "@playwright/test";
 import { BasePage } from "./base.page";
 import { digitalDownloadsPageSelectors } from "../types/digital-downloads";
 
@@ -14,6 +14,9 @@ export class DigitalDownloadsPage extends BasePage {
     await product
       .getByRole("button", digitalDownloadsPageSelectors.addToCartButton)
       .click();
+    await expect(
+      this.page.getByRole("link", { name: /^shopping cart \(1\)$/i }),
+    ).toBeVisible();
 
     return productName;
   }

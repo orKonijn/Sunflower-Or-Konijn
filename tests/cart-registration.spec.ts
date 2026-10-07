@@ -29,6 +29,16 @@ test.describe("Registration and digital downloads cart", () => {
     await context?.close();
   });
 
+  test.afterEach(async ({}, testInfo) => {
+    const page = homePage?.page;
+    if (!page || page.isClosed()) return;
+
+    await testInfo.attach("page-screenshot", {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: "image/png",
+    });
+  });
+
   test("register, add a random digital download, and verify the cart", async () => {
     const email = getRandomEmail();
 

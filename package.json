@@ -5,9 +5,9 @@
   "description": "Playwright TypeScript POM automation with Allure reporting",
   "scripts": {
     "test:e2e": "playwright test",
-    "test:report": "node scripts/test-and-report.mjs",
     "allure:generate": "allure generate allure-results --clean --output allure-report",
-    "allure:open": "allure open allure-report"
+    "allure:open": "allure open allure-report",
+    "allure:serve": "allure serve allure-results"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
